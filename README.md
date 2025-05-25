@@ -49,11 +49,11 @@ posizione:
 foto: string (binary)
     default: none
 stato: enum (attesa, attiva, in corso, chiusa, ignorata)
-    default: attiva
+    default: attesa
 uid_amministratore: string
     default: none
-lvl_successo: number
-    default: -1
+lvl_successo: number (0,5)
+    default: 0
 ```
 * **Operatore**:
 ```yaml
@@ -124,8 +124,6 @@ commenti: [object(commento)]
 #### Risposta
 - 200:
     - Header
-        - Content type: application/json
-    - Payload
         - Nuovo token di accesso
 - 401/500
 
@@ -141,19 +139,21 @@ commenti: [object(commento)]
 - 201:
     - Header
         - [BASE]/richieste/{uid}
-- 401/500
+- 500
 
 ### 3 Convalida di una richiesta di soccorso 
-questo endpoint deve ricevere le richieste provenienti dai click sui link di convalida descritti nella specifica. Nota bene che questa dovrebbe restituire un unica richiesta, dato che non dovrebbe essere possibile per un segnalatore(email) avere più di una richiesta in attesa di convalida
+questo endpoint deve ricevere le richieste provenienti dai click sui link di convalida descritti nella specifica.
+
 #### Richiesta
-`PATCH [BASE]/richieste?email={email}&stato=attesa`
+`PATCH [BASE]/richiesta/{uid}`
 - Header
+    - Token di convalida
     - Content type: application/json
 - Payload
     - stato = attivo
 #### Risposta
 - 204: No content
-- 404/500
+- 401/500
 
 ### 4 Lista delle richieste di soccorso
  Paginata e filtrata in base alla tipologia (attive, in corso, chiuse, ignorate)
@@ -167,7 +167,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - Lista eventi
-- 401/500
+- 401/404/500
 
 ### 5 Lista delle richieste di soccorso chiuse con risultato non totalmente positivo 
 #### Richiesta
@@ -180,7 +180,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - Lista richieste
-- 401/500
+- 401/404/500
 
 ### 6 Lista degli operatori attualmente liberi
 `GET [BASE]/operatori?disponibilità=true`
@@ -193,7 +193,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - Lista eventi
-- 401/500
+- 401/404/500
 
 ### 7 Creazione di una missione
 ### 7.1 Missione
@@ -263,7 +263,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - oggetto missione
-- 401/500
+- 401/404/500
 
 
 ### 11 Dettagli una richiesta di soccorso
@@ -277,7 +277,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - oggetto richiesta di soccorso
-- 401/500
+- 401/404/500
 
 ### 12 Dettagli di un operatore
 `GET [BASE]/operatori/{uid}`
@@ -290,7 +290,7 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - oggetto operatore
-- 401/500
+- 401/404/500
 
 ### 13 Lista delle missioni in cui un operatore è stato coinvolto
 `GET [BASE]/missioni/operatori/{uid}`
@@ -303,5 +303,5 @@ questo endpoint deve ricevere le richieste provenienti dai click sui link di con
         - Content type: application/json
     - Payload
         - Lista missioni
-- 401/500
+- 401/404/500
 

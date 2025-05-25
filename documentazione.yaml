@@ -1,0 +1,689 @@
+openapi: 3.0.4
+info:
+  title: Soccorso Web
+  description: |-
+    Il sito SoccorsoWeb rappresenta un generico portale per la ricezione e la gestione di richieste di soccorso. Il sito avrà una parte riservata ad amministratori (che configureranno il sistema, smisteranno le richieste e le monitoreranno) e operatori (a cui verranno inviate le richieste e che le gestiranno in prima persona). La parte pubblica del sito, invece, permetterà unicamente di inviare una richieste di soccorso senza la necessità di alcuna registrazione.
+
+    alcuni link utili:
+    - [Specifica SWA](https://github.com/SviluppoWebAvanzato-Univaq/SWA_Project_Specifications/blob/main/2024/Progetto_SWA_2024_1_SoccorsoWeb_Services.md)
+    - [Specifica WE](https://github.com/WebEngineering-Univaq/WE_Project_Specifications/blob/main/2024/Progetto_WE_2024_1_SoccorsoWeb.md)
+  version: 1.0.12
+servers:
+  - url: http://localhost:8080/SoccorsoWeb/test
+  - url: http://{regione}.SoccorsoWeb/public
+    variables:
+      regione:
+        default: Abruzzo
+tags:
+  - name: Richieste
+    description: Operazioni sulle richieste
+  - name: Missioni
+    description: Operationi sulle missioni
+  - name: Liste
+    description: Restituiscono varie liste di oggetti
+  - name: Dettagli
+    description: Restituiscono dettagli di un oggetto specifico
+  - name: Autenticazione
+    description: Operazioni che gestiscono l'autenticazione
+paths:
+  /rest/richieste:
+    post:
+      tags:
+        - Richieste
+      summary: Inserimento richiesta di soccorso
+      operationId: InsertReq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Richiesta'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessoInserimento'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/{requid}/convalida:
+    parameters: 
+      - $ref: '#/components/parameters/RichiestaUID'
+    post:
+      tags:
+        - Richieste
+      summary: convalida la richiesta
+      description: Usa un token per far convalidare la richiesta inviata via mail al richiedente (richiesta passa da "in attesa" a "attiva")
+      operationId: ReqValidation
+      security:
+        - verificationToken: []
+      responses: 
+        '204':
+          description: richiesta convalidata
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflitto'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+      
+  /rest/richieste/{stato}:
+    parameters: 
+      - $ref: '#/components/parameters/Stato'
+    get:
+      tags:
+        - Liste
+      summary: Richieste di soccorso
+      description: Lista Paginata e filtrata in base alla tipologia (attive, in corso, chiuse, ignorate)
+      operationId: ReqByState
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: lista richieste
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaRichieste'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/chiusa:
+    get:
+      tags:
+        - Liste
+      summary: Richieste chiuse non perfettamente
+      description: Lista delle richieste di soccorso chiuse con risultato non totalmente positivo (minore di 5)
+      operationId: ReqNonPos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: lista richieste
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaRichieste'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/operatori/liberi:
+    get:
+      tags:
+        - Liste
+      summary: Operatori liberi
+      description: Lista degli operatori attualmente disponibili (disponibilità = true)
+      operationId: FreeOp
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: lista operatori
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaOperatori'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/missioni:
+    post:
+      tags:
+        - Missioni
+      summary: Creazione missione
+      operationId: AddMission
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InizioMissione'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessoInserimento'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/{requid}/avvia:
+    parameters: 
+      - $ref: '#/components/parameters/RichiestaUID'
+    post:
+      tags:
+        - Richieste
+      summary: Richiesta diventa in corso
+      description: richiesta passa da "attiva" ad "in corso"
+      operationId: ReqStart
+      security:
+        - bearerAuth: []
+      responses: 
+        '204':
+          description: richiesta avviata
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflitto'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/missioni/{misuid}:
+    parameters: 
+      - $ref: '#/components/parameters/MissioneUID'
+    delete:
+      tags:
+        - Missioni
+      summary: Annulla missione
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          $ref: '#/components/responses/SuccessoEliminazione'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+    patch:
+      tags:
+        - Missioni
+      summary: Aggiorna la missione
+      description: Permette di aggiornare alcuni parametri della missione (aggiornamenti, commenti, fine)
+      operationId: MisUpdate
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AggiornaMissione'
+      responses:
+        '204':
+          description: Missione aggiornata
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+    get:
+      tags:
+        - Dettagli
+      summary: dettagli di una missione
+      operationId: GetMission
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: dettagli missione
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Missione'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/{requid}/chiudi:
+    parameters: 
+      - $ref: '#/components/parameters/RichiestaUID'
+    post:
+      tags:
+        - Richieste
+      summary: Chiusura di una richiesta 
+      description: Richiesta passa da "in corso" a "chiusa"
+      operationId: ReqEnd
+      security:
+        - bearerAuth: []
+      responses: 
+        '204':
+          description: richiesta chiusa
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflitto'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/{requid}:
+    parameters: 
+      - $ref: '#/components/parameters/RichiestaUID'
+    delete:
+      tags:
+        - Richieste
+      summary: Annulla richiesta
+      description: Eliminazione di una richiesta di soccorso
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          $ref: '#/components/responses/SuccessoEliminazione'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+    get:
+      tags:
+        - Dettagli
+      summary: dettagli di una richiesta
+      operationId: GetRequest
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: dettagli richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Richiesta'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/operatori/{opuid}:
+    parameters: 
+      - $ref: '#/components/parameters/OperatoreUID'
+    get:
+      tags:
+        - Dettagli
+      summary: dettagli di un operatore
+      operationId: GetOperator
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: dettagli operatore
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operatore'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/missioni/operatori/{opuid}:
+    parameters: 
+      - $ref: '#/components/parameters/OperatoreUID'
+    get:
+      tags:
+        - Liste
+      summary: Missioni di un operatore
+      operationId: OpMissions
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista missioni
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaMissioni'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+
+  /rest/auth/login:
+    post:
+      operationId: Login
+      description: >-
+        Effettua il login tramite Username e Password e restituisce un token di autorizzazione
+      tags:
+        - Autenticazione
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login avvenuto con successo
+          content:
+            text/plain:
+              schema:
+                type: string
+          headers:
+            Authorization:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/auth/logout:
+    delete:
+      operationId: Logout
+      tags:
+        - Autenticazione
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout avvenuto con successo
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/auth/refresh:
+    get:
+      operationId: refreshToken
+      description: >-
+        Aggiorna il token di autorizzazione
+        corrente
+      tags:
+        - Autenticazione
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Nuovo token (aggiornato)
+          content:
+            text/plain:
+              schema:
+                type: string
+          headers:
+            Authorization:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: internalToken
+    verificationToken:
+      type: apiKey
+      in: query
+      name: tokenDiVerifica
+  responses:
+    SuccessoInserimento:
+     description: Elemento creato con successo
+     headers:
+      location:
+        schema:
+         type: string
+         format: uri
+     content:
+      application/json:
+       schema:
+        type: string
+        format: uri
+    SuccessoEliminazione:
+      description: Elemento eliminato con successo
+    ErroreGenerale:
+      description: Errore generale
+    ErroreNonAutorizzato:
+      description: Token mancante o invalido
+    NotFound:
+     description: Elemento non trovato
+    Conflitto:
+      description: Azione non possibile per lo stato attuale della risorsa
+  parameters:
+    RichiestaUID:
+      name: requid
+      in: path
+      required: true
+      schema: 
+        $ref: '#/components/schemas/UID'
+    MissioneUID:
+      name: misuid
+      in: path
+      required: true
+      schema: 
+        $ref: '#/components/schemas/UID'
+    OperatoreUID:
+      name: opuid
+      in: path
+      required: true
+      schema: 
+        $ref: '#/components/schemas/UID'
+    Stato:
+      name: stato
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Stato'
+  schemas:
+    UID:
+     type: string
+     pattern: ID[a-z0-9-]+
+    Token:
+      type: string
+      pattern: Bearer [a-z0-9A-Z-]+
+    Posizione:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        long:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+    LvlSuccesso:
+      type: number
+      format: integer
+      default: 0
+      minimum: 0
+      maximum: 5
+    Stato:
+      type: string
+      enum: [attesa, attiva, in corso, chiusa]
+      default: attesa
+    ListaGenerica:
+      type: array
+      items:
+        $ref: '#/components/schemas/UID'
+    Richiesta:
+      type: object
+      properties:
+        uid:
+          $ref: '#/components/schemas/UID'
+        nome:
+          type: string
+        contatto:
+          type: string
+        descrizione:
+          type: string
+        posizione:
+          $ref: '#/components/schemas/Posizione'
+        foto:
+          type: string
+          format: binary
+          default: none
+        stato:
+          $ref: '#/components/schemas/Stato'
+        uid_amministratore:
+          type: string
+          default: none
+        lvl_successo:
+          $ref: '#/components/schemas/LvlSuccesso'
+      required:
+        - uid
+        - nome
+        - contatto
+        - descrizione
+        - posizione
+      additionalProperties: false
+    ListaRichieste:
+      type: array
+      items:
+        type: object
+        properties:
+          uid:
+            $ref: '#/components/schemas/UID'
+          nome:
+            type: string
+          contatto: 
+            type: string
+          posizione:
+            $ref: '#/components/schemas/Posizione'
+          stato:
+            $ref: '#/components/schemas/Stato'
+          lvl_successo:
+            $ref: '#/components/schemas/LvlSuccesso'
+        required:
+          - uid
+          - nome
+          - contatto
+          - posizione
+          - stato
+          - lvl_successo
+        additionalProperties: true
+    Operatore:
+      type: object
+      properties:
+        uid:
+          $ref: '#/components/schemas/UID'
+        username: 
+          type: string
+        anagrafica:
+          type: object
+          properties:
+            nome:
+              type: string
+            cognome:
+              type: string
+            nascita:
+              type: string
+              format: date
+        patenti:
+          type: array
+          items:
+            type: string
+          default: []
+        abilità:
+          type: array
+          items:
+            type: string
+          default: []
+        disponibilità:
+          type: boolean
+          default: false
+    ListaOperatori:
+      type: array
+      items:
+        type: object
+        properties:
+          uid:
+            $ref: '#/components/schemas/UID'
+          patenti:
+            type: array
+            items:
+              type: string
+            default: []
+          abilità:
+            type: array
+            items:
+              type: string
+            default: []
+          disponibilità:
+            type: boolean
+            default: false
+    InizioMissione:
+      type: object
+      properties:
+        uid:
+          $ref: '#/components/schemas/UID'
+        uid_richiesta:
+          $ref: '#/components/schemas/UID'
+        obiettivo:
+          type: string
+        posizione:
+          $ref: '#/components/schemas/Posizione'
+        operatori: 
+          $ref: '#/components/schemas/ListaGenerica'
+        mezzi:
+          $ref: '#/components/schemas/ListaGenerica'
+        attrezzi:
+          $ref: '#/components/schemas/ListaGenerica'
+        inizio: 
+          type: string
+          format: date-time
+    AggiornaMissione:
+      type: object
+      properties:
+        fine:
+          type: string
+          format: date-time
+        aggiornamenti:
+          type: array
+          items:
+            type: object
+            properties:
+              data:
+                type: string
+                format: date-time
+              descrizione:
+                type: string
+          default: []
+        commenti:
+          type: array
+          items:
+            type: object
+            properties:
+              Operatore:
+                $ref: '#/components/schemas/UID'
+              descrizione:
+                type: string
+          default: []
+    Missione:
+      type: object
+      properties:
+        creazione:
+          $ref: '#/components/schemas/InizioMissione'
+        aggiornamento:
+          $ref: '#/components/schemas/AggiornaMissione'
+    ListaMissioni:
+      type: array
+      items: 
+        type: object
+        properties:
+          uid:
+            $ref: '#/components/schemas/UID'
+          uid_richiesta:
+            $ref: '#/components/schemas/UID'
+          obiettivo:
+            type: string
+          posizione:
+            $ref: '#/components/schemas/Posizione'
+          inizio: 
+            type: string
+            format: date-time
+          fine: 
+            type: string
+            format: date-time
