@@ -9,8 +9,8 @@ info:
     - [Specifica WE](https://github.com/WebEngineering-Univaq/WE_Project_Specifications/blob/main/2024/Progetto_WE_2024_1_SoccorsoWeb.md)
   version: 1.0.12
 servers:
-  - url: http://localhost:8080/SoccorsoWeb/test
-  - url: http://{regione}.SoccorsoWeb/public
+  - url: http://localhost:8080/SoccorsoWebREST
+  - url: http://{regione}.SoccorsoWebREST
     variables:
       regione:
         default: Abruzzo
@@ -18,7 +18,7 @@ tags:
   - name: Richieste
     description: Operazioni sulle richieste
   - name: Missioni
-    description: Operationi sulle missioni
+    description: Operazioni sulle missioni
   - name: Liste
     description: Restituiscono varie liste di oggetti
   - name: Dettagli
@@ -516,6 +516,9 @@ components:
           type: string
         contatto:
           type: string
+        tempo:
+          type: string
+          format: date-time
         descrizione:
           type: string
         posizione:

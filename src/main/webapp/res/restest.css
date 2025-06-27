@@ -1,0 +1,70 @@
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+}
+
+.rest-test-ok {
+    color: green;
+}
+.rest-test-ok:after {
+    content: '\2705';
+}
+.rest-test-error {
+    color: red;
+}
+.rest-test-error:after {
+    content: '\274c';
+}
+.rest-test-wait:after {
+    content: '\231b';
+}
+.rest-test-auth:before {
+    content: '\1f512';
+}
+
+.rest-test-message-ok,.rest-test-message-error  {
+    display: none;
+}
+.rest-test-error-all .rest-test-message-error {
+    display: block;
+}
+.rest-test-ok-all .rest-test-message-ok {
+    display: block;
+}
+
+.restest .output {
+    font-size: 70%;
+    word-break: break-all;
+}
+
+.restest .request {
+    font-size: 70%;
+    word-break: break-all;
+}
+
+.restest .request a {
+    color: inherit;
+}
+
+table.restest {
+    border: 2px solid black;
+    border-collapse: collapse;
+    width: 100%;
+    padding:0;
+}
+
+table.restest td {
+    border: 1px solid gray;
+    padding:1px;
+}
+
+table.restest tbody tr:nth-child(odd) {
+    background-color: azure;
+}
+
+table.restest thead tr {
+    background-color: cadetblue;
+    color: white;
+    font-weight: bold;
+    border: 2px solid black;
+}
