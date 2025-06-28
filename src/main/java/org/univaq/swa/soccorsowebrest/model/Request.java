@@ -9,11 +9,11 @@ public class Request {
     public enum Status{Waiting, Active, InProgress, Closed}
     private String uid = null;
     private String name = null;
-    private String contact = null;
+    private String email = null;
     private String location = null;
     private String description = null;
     private ZonedDateTime time = null;
-    private Double[] position = new Double[2];
+    private float[] position = new float[2];
     private byte[] photo = null;
     private Status status = null;
     private String admin_uid = null;
@@ -76,17 +76,17 @@ public class Request {
     }
 
     /**
-     * @return the contact
+     * @return the email
      */
-    public String getContact() {
-        return contact;
+    public String getEmail() {
+        return email;
     }
 
     /**
-     * @param contact the contact to set
+     * @param email the email to set
      */
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**
@@ -134,14 +134,14 @@ public class Request {
     /**
      * @return the position
      */
-    public Double[] getPosition() {
+    public float[] getPosition() {
         return position;
     }
 
     /**
      * @param position the position to set
      */
-    public void setPosition(Double[] position) {
+    public void setPosition(float[] position) {
         this.position = position;
     }
 

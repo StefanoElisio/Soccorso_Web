@@ -514,7 +514,7 @@ components:
           $ref: '#/components/schemas/UID'
         nome:
           type: string
-        contatto:
+        email:
           type: string
         tempo:
           type: string

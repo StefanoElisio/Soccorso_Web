@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class Mission {
     public class StartingMission {
         private String uid = null;
-        private Request request;
+        private String request_uid = null;
         private String objective = null;
         private ArrayList<Operator> operators = new ArrayList<Operator>();
         private ArrayList<String> vehicles = new ArrayList<String>();
@@ -45,17 +45,17 @@ public class Mission {
     }
 
     /**
-     * @return the request
+     * @return the request_uid
      */
-    public Request getRequest() {
-        return this.starting_mission.request;
+    public String getRequest_uid() {
+        return this.starting_mission.request_uid;
     }
 
     /**
-     * @param request the request to set
+     * @param request_uid the request_uid to set
      */
-    public void setRequest(Request request) {
-        this.starting_mission.request = request;
+    public void setRequest_uid(String request_uid) {
+        this.starting_mission.request_uid = request_uid;
     }
 
     /**
