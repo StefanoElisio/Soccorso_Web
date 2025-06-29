@@ -8,10 +8,6 @@ import org.univaq.swa.soccorsowebrest.NotFoundException;
 import org.univaq.swa.soccorsowebrest.model.Request;
 import org.univaq.swa.soccorsowebrest.model.Request.Status;
 
-/**
- *
- * @author Stefano Elisio
- */
 public interface RequestsService {
 
     String addRequest(Request body);
