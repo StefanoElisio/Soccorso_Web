@@ -16,7 +16,7 @@ public interface RequestsService {
 
     Request getRequest(String uid) throws NotFoundException;
 
-    List<Request> getRequests(Status status) throws NotFoundException;
+    List<Request> getRequestsbyStatus(Status status) throws NotFoundException;
 
     List<Request> getClosedRequests() throws NotFoundException;
 

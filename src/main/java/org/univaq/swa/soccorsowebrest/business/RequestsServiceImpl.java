@@ -29,7 +29,7 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public List<Request> getRequests(Status status) throws NotFoundException{
+    public List<Request> getRequestsbyStatus(Status status) throws NotFoundException{
         return createDummyRequestsList();
     }
 
