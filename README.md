@@ -1,6 +1,6 @@
-# Documentazione delle Dipendenze dell'API
-
-Questo documento elenca tutte le dipendenze necessarie per utilizzare questa API REST.
+# Soccorso_Web
+Progetto di Sviluppo Web avanzato
+Puoi trovare altre specifiche e considerazioni sul progetto in fase di progettazione [qui](Doc/doc_progettazione.md)
 
 ## Dipendenze Principali
 
