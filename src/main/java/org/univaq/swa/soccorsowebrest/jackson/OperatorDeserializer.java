@@ -32,6 +32,9 @@ public class OperatorDeserializer extends JsonDeserializer<Operator> {
             operator.setUsername(node.get("username").asText());
         if (node.has("availability"))
             operator.setAvailability(node.get("availability").asBoolean());
+
+        // Da capire come deserializzare delle liste
+        
         return operator;
     }
 }

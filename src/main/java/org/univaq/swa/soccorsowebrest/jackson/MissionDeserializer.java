@@ -31,6 +31,8 @@ public class MissionDeserializer extends JsonDeserializer<Mission> {
         if (node.has("end"))
             mission.setEnd(p.getCodec().treeToValue(node.get("end"), ZonedDateTime.class));
 
+        // Da capire come deserializzare delle liste
+
         return mission;
     }
 }

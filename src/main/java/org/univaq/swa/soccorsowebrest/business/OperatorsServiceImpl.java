@@ -8,10 +8,6 @@ import java.util.Random;
 
 import org.univaq.swa.soccorsowebrest.model.Operator;
 
-/**
- *
- * @author Stefano Elisio
- */
 public class OperatorsServiceImpl implements OperatorsService {
 
     @Override
@@ -77,7 +73,7 @@ public class OperatorsServiceImpl implements OperatorsService {
         return e;
     }
 
-    public String createString(int l) {
+    private String createString(int l) {
         byte[] array = new byte[l]; // length is bounded by l
         random.nextBytes(array);
         String generatedString = new String(array, Charset.forName("UTF-8"));

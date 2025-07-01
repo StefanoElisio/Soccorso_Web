@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 
 import org.univaq.swa.soccorsowebrest.model.Request;
 
-// Da aggiungere eccezioni
 public class RequestDeserializer extends JsonDeserializer<Request> {
 
     @Override

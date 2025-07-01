@@ -18,16 +18,13 @@ public class Mission {
         private ArrayList<String> vehicles = new ArrayList<String>();
         private ArrayList<String> equipment = new ArrayList<String>();
         private ZonedDateTime start = null;
-    }
-
-    private StartingMission starting_mission = new StartingMission();
-
+    }    
     public class UpdateMission {
         private ZonedDateTime end = null;
         private Map<ZonedDateTime, String> updates = new TreeMap<ZonedDateTime, String>();
         private Map<Operator, String> comments = new HashMap<Operator, String>();
     }
-
+    private StartingMission starting_mission = new StartingMission();
     private UpdateMission updateMission = new UpdateMission();
 
     /**
