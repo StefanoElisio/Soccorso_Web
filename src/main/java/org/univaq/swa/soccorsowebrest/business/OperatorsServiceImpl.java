@@ -25,6 +25,11 @@ public class OperatorsServiceImpl implements OperatorsService {
         return createDummyOperator(createUID(), false);
     }
 
+    @Override
+    public List<String> getMissions(String uid) {
+        return createDummyUIDList();
+    }
+
     ///////
     Random random = new Random();
 
@@ -40,6 +45,15 @@ public class OperatorsServiceImpl implements OperatorsService {
                 .toString();
 
         return "ID" + generatedString;
+    }
+
+    private List<String> createDummyUIDList() {
+        List<String> result = new ArrayList<>();
+        int n = random.nextInt(1, 10);
+        for (int i = 0; i < n; ++i) {
+            result.add(createUID());
+        }
+        return result;
     }
 
     public List<Operator> createDummyOperatorsList() {

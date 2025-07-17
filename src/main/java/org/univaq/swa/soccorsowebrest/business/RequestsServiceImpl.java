@@ -25,7 +25,7 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Override
     public Request getRequest(String uid) throws NotFoundException {
-        return createDummyRequest(createUID(), Status.Waiting);
+        return createDummyRequest(createUID(), Status.waiting);
     }
 
     @Override
@@ -34,10 +34,10 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public List<Request> getClosedRequests() throws NotFoundException{
+    public List<Request> getFailedRequests() throws NotFoundException{
         List<Request> list = new ArrayList<Request>();
         for (Request request : createDummyRequestsList()) {
-            if(request.getStatus()==Status.Closed && request.getSuccess_lvl()<5)
+            if(request.getStatus()==Status.closed && request.getSuccess_lvl()<5)
                 list.add(request);
         }
         return list;

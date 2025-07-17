@@ -18,6 +18,7 @@ public class Operator {
     private ArrayList<String> skills = new ArrayList<String>();
     private Boolean availability = false;
     private Registry registry = new Registry();
+    private ArrayList<String> missions = new ArrayList<String>();
 
 
     /**
@@ -144,5 +145,19 @@ public class Operator {
      */
     public void setRegistry(Registry registry) {
         this.registry = registry;
+    }
+
+    /**
+     * @return the missions
+     */
+    public ArrayList<String> getMissions() {
+        return missions;
+    }
+
+    /**
+     * @param missions the mission to set
+     */
+    public void setMissions(ArrayList<String> missions) {
+        this.missions = missions;
     }
 }

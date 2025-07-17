@@ -19,7 +19,5 @@ public interface MissionsService {
 
     List<Mission> getMissions(ZonedDateTime from, ZonedDateTime to);
 
-    List<Mission> getOperatorMissions(String op_uid);
-
     void updateMission(String uid, UpdateMission body) throws NotFoundException, DatabaseException;
 }

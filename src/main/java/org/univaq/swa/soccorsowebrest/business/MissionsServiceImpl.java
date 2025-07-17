@@ -42,20 +42,6 @@ public class MissionsServiceImpl implements MissionsService {
     }
 
     @Override
-    public List<Mission> getOperatorMissions(String uid) {
-        List<Mission> list = new ArrayList<Mission>();
-        for (Mission mission : createDummyMissionsList()) {
-            for (Operator operator : mission.getOperators()) {
-                if (operator.getUid() == uid) {
-                    list.add(mission);
-                    break;
-                }
-            }
-        }
-        return list;
-    }
-
-    @Override
     public void updateMission(String uid, UpdateMission body) {
     }
 

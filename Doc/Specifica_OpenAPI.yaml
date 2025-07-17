@@ -43,30 +43,6 @@ paths:
           $ref: '#/components/responses/SuccessoInserimento'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
-  /rest/richieste/{requid}/convalida:
-    parameters: 
-      - $ref: '#/components/parameters/RichiestaUID'
-    post:
-      tags:
-        - Richieste
-      summary: convalida la richiesta
-      description: Usa un token per far convalidare la richiesta inviata via mail al richiedente (richiesta passa da "in attesa" a "attiva")
-      operationId: ReqValidation
-      security:
-        - verificationToken: []
-      responses: 
-        '204':
-          description: richiesta convalidata
-        '401':
-          $ref: '#/components/responses/ErroreNonAutorizzato'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflitto'
-        '500':
-          $ref: '#/components/responses/ErroreGenerale'
-      
-  /rest/richieste/{stato}:
     parameters: 
       - $ref: '#/components/parameters/Stato'
     get:
@@ -90,7 +66,28 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
-  /rest/richieste/chiusa:
+  /rest/richieste/{requid}/convalida:
+    parameters: 
+      - $ref: '#/components/parameters/RichiestaUID'
+      - $ref: '#/components/parameters/TokenConvalida'
+    get:
+      tags:
+        - Richieste
+      summary: convalida la richiesta
+      description: Usa un token per far convalidare la richiesta inviata via mail al richiedente (richiesta passa da "in attesa" a "attiva")
+      operationId: ReqValidation
+      responses: 
+        '200':
+          description: richiesta convalidata
+        '401':
+          $ref: '#/components/responses/ErroreNonAutorizzato'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflitto'
+        '500':
+          $ref: '#/components/responses/ErroreGenerale'
+  /rest/richieste/fallite:
     get:
       tags:
         - Liste
@@ -155,28 +152,6 @@ paths:
           $ref: '#/components/responses/ErroreNonAutorizzato'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
-  /rest/richieste/{requid}/avvia:
-    parameters: 
-      - $ref: '#/components/parameters/RichiestaUID'
-    post:
-      tags:
-        - Richieste
-      summary: Richiesta diventa in corso
-      description: richiesta passa da "attiva" ad "in corso"
-      operationId: ReqStart
-      security:
-        - bearerAuth: []
-      responses: 
-        '204':
-          description: richiesta avviata
-        '401':
-          $ref: '#/components/responses/ErroreNonAutorizzato'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflitto'
-        '500':
-          $ref: '#/components/responses/ErroreGenerale'
   /rest/missioni/{misuid}:
     parameters: 
       - $ref: '#/components/parameters/MissioneUID'
@@ -235,28 +210,6 @@ paths:
           $ref: '#/components/responses/ErroreNonAutorizzato'
         '404':
           $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ErroreGenerale'
-  /rest/richieste/{requid}/chiudi:
-    parameters: 
-      - $ref: '#/components/parameters/RichiestaUID'
-    post:
-      tags:
-        - Richieste
-      summary: Chiusura di una richiesta 
-      description: Richiesta passa da "in corso" a "chiusa"
-      operationId: ReqEnd
-      security:
-        - bearerAuth: []
-      responses: 
-        '204':
-          description: richiesta chiusa
-        '401':
-          $ref: '#/components/responses/ErroreNonAutorizzato'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflitto'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
   /rest/richieste/{requid}:
@@ -321,7 +274,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
-  /rest/missioni/operatori/{opuid}:
+  /rest/operatore/{opuid}/missioni:
     parameters: 
       - $ref: '#/components/parameters/OperatoreUID'
     get:
@@ -344,7 +297,6 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ErroreGenerale'
-
   /rest/auth/login:
     post:
       operationId: Login
@@ -422,10 +374,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: internalToken
-    verificationToken:
-      type: apiKey
-      in: query
-      name: tokenDiVerifica
   responses:
     SuccessoInserimento:
      description: Elemento creato con successo
@@ -449,6 +397,12 @@ components:
     Conflitto:
       description: Azione non possibile per lo stato attuale della risorsa
   parameters:
+    TokenConvalida:
+      name: token
+      in: query
+      required: true
+      schema:
+        type: string
     RichiestaUID:
       name: requid
       in: path
@@ -469,7 +423,7 @@ components:
         $ref: '#/components/schemas/UID'
     Stato:
       name: stato
-      in: path
+      in: query
       required: true
       schema:
         $ref: '#/components/schemas/Stato'
@@ -596,6 +550,8 @@ components:
         disponibilità:
           type: boolean
           default: false
+        missioni: 
+          $ref: '#/components/schemas/ListaGenerica'
     ListaOperatori:
       type: array
       items:

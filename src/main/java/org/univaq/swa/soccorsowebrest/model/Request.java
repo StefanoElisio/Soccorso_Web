@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
  * Request
  */
 public class Request {
-    public enum Status{Waiting, Active, InProgress, Closed}
+    public enum Status{waiting, active, inProgress, closed}
     private String uid = null;
     private String name = null;
     private String email = null;

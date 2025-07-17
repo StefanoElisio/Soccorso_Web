@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
+import com.fasterxml.jackson.datatype.jsr310.*;;
+
 
 /**
  *
@@ -40,18 +42,9 @@ public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper
         customSerializer.addSerializer(Operator.class, new OperatorSerializer());
         customSerializer.addDeserializer(Operator.class, new OperatorDeserializer());
 
-        //
         m.registerModule(customSerializer);
-
-        // per il supporto alla serializzazione automatica dei tipi Date/Time di Java 8
-        // (ZonedDateTime, LocalTime, ecc.)
-        // è necessario aggiungere alle dipendenze la libreria
-        // com.fasterxml.jackson.datatype:jackson-datatype-jsr310
-        // mapper.registerModule(new JavaTimeModule());
-        // questa feature fa cercare a Jackson tutti i moduli compatibili inseriti nel
-        // contesto...
+        mapper.registerModule(new JavaTimeModule());
         m.findAndRegisterModules();
-        // perchè le date appaiano "human readable"
         m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         return m;

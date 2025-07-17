@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.univaq.swa.soccorsowebrest.jackson.ObjectMapperContextResolver;
+import org.univaq.swa.soccorsowebrest.resources.RequestResource;
 import org.univaq.swa.soccorsowebrest.resources.RequestsResource;
+import org.univaq.swa.soccorsowebrest.resources.TestResource;
 import org.univaq.swa.soccorsowebrest.security.AuthLoggedFilter;
 import org.univaq.swa.soccorsowebrest.security.AuthenticationRes;
 import org.univaq.swa.soccorsowebrest.security.CORSFilter;
@@ -28,7 +30,7 @@ public class RESTApp extends Application {
         //aggiungiamo tutte le *root resurces* (cioè quelle
         //con l'annotazione Path) che vogliamo pubblicare
         c.add(RequestsResource.class);
-        c.add(AuthenticationRes.class);
+        c.add(TestResource.class);
 
         //aggiungiamo il provider Jackson per poter
         //usare i suoi servizi di serializzazione e 

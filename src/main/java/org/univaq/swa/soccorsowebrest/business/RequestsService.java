@@ -18,7 +18,7 @@ public interface RequestsService {
 
     List<Request> getRequestsbyStatus(Status status) throws NotFoundException;
 
-    List<Request> getClosedRequests() throws NotFoundException;
+    List<Request> getFailedRequests() throws NotFoundException;
 
     void validatingRequest(String uid) throws NotFoundException, DatabaseException;
 
