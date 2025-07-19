@@ -11,10 +11,6 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.security.Principal;
 
-/**
- *
- * @author didattica
- */
 @Provider
 @Logged
 @Priority(Priorities.AUTHENTICATION)

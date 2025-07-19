@@ -19,7 +19,7 @@ import org.univaq.swa.soccorsowebrest.business.RequestsServiceFactory;
 import org.univaq.swa.soccorsowebrest.model.Request;
 import org.univaq.swa.soccorsowebrest.model.Request.Status;
 
-@Path("requests")
+@Path("/requests")
 public class RequestsResource {
 
     private final RequestsService business;
@@ -31,9 +31,12 @@ public class RequestsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addRequest(@Valid Request request,@Context UriInfo uriinfo){
+    public Response addRequest(@Valid Request request, @Context UriInfo uriinfo) {
         String uid = business.addRequest(request);
-        URI uri = uriinfo.getBaseUriBuilder().path(getClass()).path(getClass(), "getRequest").build(uid);
+        URI uri = uriinfo.getBaseUriBuilder()
+                .path(RequestsResource.class)
+                .path(uid)
+                .build();
         return Response.created(uri).entity(uri.toString()).build();
     }
 

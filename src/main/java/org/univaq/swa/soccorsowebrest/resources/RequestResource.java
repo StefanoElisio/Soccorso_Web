@@ -20,6 +20,7 @@ import org.univaq.swa.soccorsowebrest.business.RequestsServiceFactory;
 import org.univaq.swa.soccorsowebrest.model.Request;
 import org.univaq.swa.soccorsowebrest.security.Logged;
 
+@Path("/requests/{uid}")
 public class RequestResource {
 
     private final RequestsService business;

@@ -2,12 +2,6 @@ package org.univaq.swa.soccorsowebrest.security;
 
 import jakarta.ws.rs.core.UriInfo;
 
-/**
- *
- * Una classe di utilità di supporto all'autenticazione 
- * qui usiamo JWT per tutte le operazioni
- *
- */
 public class AuthHelpers {
     
     private static AuthHelpers instance = null;

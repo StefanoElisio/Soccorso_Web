@@ -10,16 +10,11 @@ import org.univaq.swa.soccorsowebrest.resources.RequestResource;
 import org.univaq.swa.soccorsowebrest.resources.RequestsResource;
 import org.univaq.swa.soccorsowebrest.resources.TestResource;
 import org.univaq.swa.soccorsowebrest.security.AuthLoggedFilter;
-import org.univaq.swa.soccorsowebrest.security.AuthenticationRes;
 import org.univaq.swa.soccorsowebrest.security.CORSFilter;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
-/**
- *
- * @author didattica
- */
 @ApplicationPath("rest")
 public class RESTApp extends Application {
 
@@ -27,32 +22,33 @@ public class RESTApp extends Application {
 
     public RESTApp() {
         HashSet<Class<?>> c = new HashSet<>();
-        //aggiungiamo tutte le *root resurces* (cioè quelle
-        //con l'annotazione Path) che vogliamo pubblicare
+        // aggiungiamo tutte le *root resurces* (cioè quelle
+        // con l'annotazione Path) che vogliamo pubblicare
+        c.add(RequestResource.class);
         c.add(RequestsResource.class);
         c.add(TestResource.class);
 
-        //aggiungiamo il provider Jackson per poter
-        //usare i suoi servizi di serializzazione e 
-        //deserializzazione JSON
+        // aggiungiamo il provider Jackson per poter
+        // usare i suoi servizi di serializzazione e
+        // deserializzazione JSON
         c.add(JacksonJsonProvider.class);
 
-        //necessario se vogliamo una (de)serializzazione custom di qualche classe    
+        // necessario se vogliamo una (de)serializzazione custom di qualche classe
         c.add(ObjectMapperContextResolver.class);
 
-        //esempio di autenticazione
+        // esempio di autenticazione
         c.add(AuthLoggedFilter.class);
 
-        //aggiungiamo il filtro che gestisce gli header CORS
+        // aggiungiamo il filtro che gestisce gli header CORS
         c.add(CORSFilter.class);
 
         classes = Collections.unmodifiableSet(c);
     }
 
-    //l'override di questo metodo deve restituire il set
-    //di classi che Jersey utilizzerà per pubblicare il
-    //servizio. Tutte le altre, anche se annotate, verranno
-    //IGNORATE
+    // l'override di questo metodo deve restituire il set
+    // di classi che Jersey utilizzerà per pubblicare il
+    // servizio. Tutte le altre, anche se annotate, verranno
+    // IGNORATE
     @Override
     public Set<Class<?>> getClasses() {
         return classes;

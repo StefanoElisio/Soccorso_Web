@@ -9,31 +9,29 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
-import com.fasterxml.jackson.datatype.jsr310.*;;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-
-/**
- *
- * @author didattica
- */
 @Provider
 public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {
 
     private final ObjectMapper mapper;
-
-    public ObjectMapperContextResolver() {
-        this.mapper = createObjectMapper();
-    }
 
     @Override
     public ObjectMapper getContext(Class<?> type) {
         return mapper;
     }
 
-    private ObjectMapper createObjectMapper() {
-        ObjectMapper m = new ObjectMapper();
-        // abilitiamo una feature nuova...
-        m.enable(SerializationFeature.INDENT_OUTPUT);
+    public ObjectMapperContextResolver() {
+        this.mapper = new ObjectMapper();
+
+        // Configurazione base
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Registrazione moduli
+        mapper.registerModule(new JavaTimeModule());
+
+        // Modulo per i serializzatori custom
         SimpleModule customSerializer = new SimpleModule("CustomSerializersModule");
         customSerializer.addSerializer(Request.class, new RequestSerializer());
         customSerializer.addDeserializer(Request.class, new RequestDeserializer());
@@ -42,11 +40,7 @@ public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper
         customSerializer.addSerializer(Operator.class, new OperatorSerializer());
         customSerializer.addDeserializer(Operator.class, new OperatorDeserializer());
 
-        m.registerModule(customSerializer);
-        mapper.registerModule(new JavaTimeModule());
-        m.findAndRegisterModules();
-        m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        return m;
+        mapper.registerModule(customSerializer);
+        mapper.findAndRegisterModules();        
     }
 }
