@@ -1,7 +1,7 @@
 # Soccorso_Web
 Progetto di Sviluppo Web avanzato
 - link del codice su [GitHub](https://github.com/StefanoElisio/Soccorso_Web)
-- Puoi trovare altre specifiche e considerazioni sul progetto in fase di progettazione [qui](Doc/doc_progettazione.md)
+- Puoi trovare altre specifiche e considerazioni sul progetto in fase di progettazione [qui](Doc/doc_progettazione.md) (completamente non considerate in seguito purtroppo)
 
 ## Dipendenze Principali
 
@@ -62,15 +62,13 @@ Progetto di Sviluppo Web avanzato
 Per progetti Maven, queste dipendenze verranno risolte automaticamente. Per altri sistemi di build, assicurarsi di includere tutte le dipendenze elencate.
 
 ## Funzionalità
-Il progetto è stato progettato per soddisfare tutte e 13 le richieste evidenziate nella specifica.
+Il progetto è stato progettato per soddisfare tutte e 13 le richieste evidenziate nella specifica ma solo le 4 richieste sono state implementate sul client.
 - 3 Classi definite (Richiesta, Missione e Operatore)
 - Logica di business (prototipale) implementata per soddisfare tutte le richieste necessarie
-- Serializzatori e deserializzatori per ogniuna delle 3 classi e per ogniuno dei campi
+- Nel client si troverà una schermata per il login, e per l'invio di una richiesta di soccorso. Mentre dopo il login è possibile chiamare le GET sugli operatori liberi o su le richieste con un certo stato scelto (le liste sono generate casualmente e dinamicamente)
 
 ### Mancanze
-- Mancano alcuni campi nei deserializzatori (liste di oggetti)
 - Parte di autenticazione (e le eccezzioni) è stata ripresa dal progetto di esempio (fatto in classe) ma non è stata ulteriormente implementata, particolarmente andrebbe distinto l'accesso fra l'admin e gli operatori
-- Resources purtroppo implementate solo per le richieste, mancano opatori e missioni
 
 ## Specifica API
 - la specifica in formato OpenAPI è consultabile con il seguente [file.yaml](Doc/Specifica_OpenAPI.yaml) tramite il tool di *Swagger*(<https://swagger.io/tools>)
