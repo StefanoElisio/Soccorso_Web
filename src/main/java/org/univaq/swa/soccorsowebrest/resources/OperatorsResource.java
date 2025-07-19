@@ -3,7 +3,6 @@ package org.univaq.swa.soccorsowebrest.resources;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.univaq.swa.soccorsowebrest.business.OperatorsService;
 import org.univaq.swa.soccorsowebrest.business.OperatorsServiceFactory;
@@ -23,7 +22,7 @@ public class OperatorsResource {
 
     @GET
     @Path("/free")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({"application/json"})
     @Logged
     public Response getFreeOperators() {
         try {

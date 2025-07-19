@@ -77,7 +77,7 @@ public class MissionsServiceImpl implements MissionsService {
         e.setUid(uid);
         e.setRequest_uid(createUID());
         e.setObjective("Aiutare " + uid);
-        e.setOperators(new ArrayList<Operator>(opService.createDummyOperatorsList()));
+        e.setOperators(new ArrayList<Operator>(opService.createDummyOperatorsList(null)));
         int np = random.nextInt(1, 5);
         String p = new String();
         for (int i = 0; i < np; ++i) {

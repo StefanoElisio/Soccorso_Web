@@ -49,8 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
             email: document.getElementById('email').value,
             location: document.getElementById('location').value,
             description: document.getElementById('description').value
-        };
-
+        };      
         try {
             const response = await fetch(`${API_BASE_URL}/requests`, {
                 method: 'POST',
@@ -79,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(`${API_BASE_URL}/operators/free`, {
                 headers: { 'Authorization': authToken }
             });
-
             if (response.ok) {
                 const operators = await response.json();
                 renderOperators(operators);

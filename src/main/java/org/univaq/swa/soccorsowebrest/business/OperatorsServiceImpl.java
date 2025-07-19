@@ -17,7 +17,7 @@ public class OperatorsServiceImpl implements OperatorsService {
 
     @Override
     public List<Operator> getFreeOperators() {
-        return createDummyOperatorsList();
+        return createDummyOperatorsList(true);
     }
 
     @Override
@@ -56,11 +56,17 @@ public class OperatorsServiceImpl implements OperatorsService {
         return result;
     }
 
-    public List<Operator> createDummyOperatorsList() {
+    public List<Operator> createDummyOperatorsList(Boolean free) {
         List<Operator> result = new ArrayList<>();
         int n = random.nextInt(1, 10);
-        for (int i = 0; i < n; ++i) {
-            result.add(createDummyOperator(createUID(), random.nextBoolean()));
+        if (free==null) {
+            for (int i = 0; i < n; ++i) {
+                result.add(createDummyOperator(createUID(), random.nextBoolean()));
+            }
+        } else {
+            for (int i = 0; i < n; ++i) {
+                result.add(createDummyOperator(createUID(), free));
+            }
         }
         return result;
     }

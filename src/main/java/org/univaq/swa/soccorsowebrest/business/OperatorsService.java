@@ -13,7 +13,5 @@ public interface OperatorsService {
 
     Operator getOperator(String uid) throws NotFoundException;
 
-    List<Operator> createDummyOperatorsList();
-
     List<String> getMissions(String uid) throws NotFoundException;
 }
