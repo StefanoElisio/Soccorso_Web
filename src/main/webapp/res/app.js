@@ -49,28 +49,36 @@ document.addEventListener('DOMContentLoaded', function () {
             email: document.getElementById('email').value,
             location: document.getElementById('location').value,
             description: document.getElementById('description').value
-        };      
-        try {
-            const response = await fetch(`${API_BASE_URL}/requests`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestData)
-            });
+        };
+        if (requestData.name == "") document.getElementById("request-message").textContent = 'Inserisci nome'
+        else if (requestData.email == "") showMessage('request-message', 'Inserisci email', 'error');
+        else if (requestData.location == "") showMessage('request-message', 'Inserisci location', 'error');
+        else if (requestData.description == "") showMessage('request-message', 'Inserisci description', 'error');
+        else {
 
-            if (response.ok) {
-                showMessage('request-message', 'Richiesta inviata con successo!', 'success');
-                document.getElementById('request-form').reset();
-            } else {
-                const error = await response.text();
-                showMessage('request-message', `Errore: ${error}`, 'error');
+            try {
+                const response = await fetch(`${API_BASE_URL}/requests`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.ok) {
+                    showMessage('request-message', 'Richiesta inviata con successo!', 'success');
+                    document.getElementById('request-form').reset();
+                } else {
+                    const error = await response.text();
+                    showMessage('request-message', `Errore: ${error}`, 'error');
+                }
+            } catch (error) {
+                showMessage('request-message', 'Errore di connessione', 'error');
+            } finally {
+                requestBtn.disabled = false;
+                requestBtn.textContent = 'Invia Richiesta';
             }
-        } catch (error) {
-            showMessage('request-message', 'Errore di connessione', 'error');
-        } finally {
-            requestBtn.disabled = false;
-            requestBtn.textContent = 'Invia Richiesta';
         }
     });
+
 
     loadOperatorsBtn.addEventListener('click', async function () {
 
@@ -97,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(`${API_BASE_URL}/requests?status=${statusFilter.value}`, {
                 headers: { 'Authorization': authToken }
             });
-
             if (response.ok) {
                 const requests = await response.json();
                 renderRequests(requests);
