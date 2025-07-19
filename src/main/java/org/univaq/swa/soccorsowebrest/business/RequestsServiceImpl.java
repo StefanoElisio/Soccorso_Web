@@ -29,15 +29,15 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public List<Request> getRequestsbyStatus(Status status) throws NotFoundException{
-        return createDummyRequestsList();
+    public List<Request> getRequestsbyStatus(Status status) throws NotFoundException {
+        return createDummyRequestsList(status);
     }
 
     @Override
-    public List<Request> getFailedRequests() throws NotFoundException{
+    public List<Request> getFailedRequests() throws NotFoundException {
         List<Request> list = new ArrayList<Request>();
-        for (Request request : createDummyRequestsList()) {
-            if(request.getStatus()==Status.closed && request.getSuccess_lvl()<5)
+        for (Request request : createDummyRequestsList(null)) {
+            if (request.getStatus() == Status.closed && request.getSuccess_lvl() < 5)
                 list.add(request);
         }
         return list;
@@ -45,7 +45,7 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Override
     public void validatingRequest(String uid) throws NotFoundException, DatabaseException {
-        
+
     }
 
     @Override
@@ -76,12 +76,19 @@ public class RequestsServiceImpl implements RequestsService {
         return "ID" + generatedString;
     }
 
-    private List<Request> createDummyRequestsList() {
+    private List<Request> createDummyRequestsList(Status status) {
         List<Request> result = new ArrayList<>();
         int n = random.nextInt(1, 10);
-        Status[] statuses = Status.values();
-        for (int i = 0; i < n; ++i) {
-            result.add(createDummyRequest(createUID(), statuses[random.nextInt(statuses.length)] ));
+        if (status == null) {
+            Status[] statuses = Status.values();
+            for (int i = 0; i < n; ++i) {
+                result.add(createDummyRequest(createUID(), statuses[random.nextInt(statuses.length)]));
+            }
+        }
+        else{
+            for (int i = 0; i < n; ++i) {
+                result.add(createDummyRequest(createUID(), status));
+            }
         }
         return result;
     }
@@ -90,11 +97,11 @@ public class RequestsServiceImpl implements RequestsService {
         Request e = new Request();
         e.setUid(uid);
         e.setName("Pinco." + uid);
-        e.setEmail(e.getName()+"@pallinomail.com");
+        e.setEmail(e.getName() + "@pallinomail.com");
         e.setDescription(uid + " richiesta di aiuto");
         e.setLocation("Regione della pizza");
         e.setTime(ZonedDateTime.now().minus(random.nextInt(24), ChronoUnit.HOURS));
-        e.setPosition(new float[]{random.nextFloat(-90,90),random.nextFloat(-180,180)});
+        e.setPosition(new float[] { random.nextFloat(-90, 90), random.nextFloat(-180, 180) });
         e.setPhoto("Una bella foto :D".getBytes());
         e.setStatus(status);
         e.setAdmin_uid(createUID());

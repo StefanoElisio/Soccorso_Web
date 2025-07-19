@@ -20,7 +20,6 @@ import org.univaq.swa.soccorsowebrest.business.RequestsServiceFactory;
 import org.univaq.swa.soccorsowebrest.model.Request;
 import org.univaq.swa.soccorsowebrest.security.Logged;
 
-@Path("/requests/{uid}")
 public class RequestResource {
 
     private final RequestsService business;
@@ -54,14 +53,14 @@ public class RequestResource {
     @PUT
     @Path("/photo")
     @Consumes(MediaType.WILDCARD)
-    public Response updatePhoto(@Context UriInfo c,InputStream data) {
+    public Response updatePhoto(@Context UriInfo c, InputStream data) {
         try {
             business.updatePhoto(request.getUid(), data);
+            return Response.noContent().build();
         } catch (NotFoundException ex) {
             return Response.status(Response.Status.NOT_FOUND).entity("Request not found").build();
         } catch (DatabaseException ex) {
             return Response.serverError().entity(ex.getMessage()).build();
         }
-        return Response.noContent().build();
     }
 }
